@@ -22,6 +22,8 @@ public class Main extends Application {
 	protected static DatabaseConnector db;
 
 	protected static String style = "light.css";
+	
+	protected static int userId;
 
 	public static void main(String[] args) throws SQLException {
 
@@ -30,10 +32,10 @@ public class Main extends Application {
 		String username = "CS1430196";
 		String password = "truskimp";
 
-		// FIXME Remove this
-		url = "jdbc:mysql://localhost/hospital";
-		username = "jeegna";
-		password = "password";
+		// HACK Remove this
+//		url = "jdbc:mysql://localhost/hospital";
+//		username = "jeegna";
+//		password = "password";
 
 		try {
 			db = new DatabaseConnector(url, username, password);
@@ -41,6 +43,8 @@ public class Main extends Application {
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("VendorError: " + e.getErrorCode());
+			System.err.println("Could not create connection to database.\nOperation aborted");
+			return;
 		}
 
 		launch(args);

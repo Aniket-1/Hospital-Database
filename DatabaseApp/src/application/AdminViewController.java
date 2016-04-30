@@ -1,6 +1,8 @@
 package application;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,7 @@ import javafx.scene.layout.AnchorPane;
 public class AdminViewController extends Main {
 
 	private HospitalDatabase hdb = new HospitalDatabase();
-	
+
 	public MenuBar menuBar;
 	public Menu menuFile;
 	public MenuItem menuItemLogout;
@@ -74,7 +76,7 @@ public class AdminViewController extends Main {
 	public Button buttonCreatePatient;
 
 	public AnchorPane paneDoctors;
-	public ComboBox<User> comboBoxDoctorId;
+	public ComboBox<String> comboBoxDoctorId;
 	public TextField textFieldRaiseAmount;
 	public Button buttonUpdateDoctor;
 
@@ -83,8 +85,8 @@ public class AdminViewController extends Main {
 	public Button buttonCancelAppointment;
 
 	public AnchorPane paneBookAppointment;
-	public ComboBox<User> comboBoxPatient;
-	public ComboBox<User> comboBoxDoctor;
+	public ComboBox<String> comboBoxPatient;
+	public ComboBox<String> comboBoxDoctor;
 	public DatePicker datePickerDate;
 	public TextArea textAreaNotes;
 	public Button buttonBook;
@@ -110,9 +112,9 @@ public class AdminViewController extends Main {
 
 	public void onButtonDoctorsClick() {
 		hide();
-		paneDoctors.setVisible(true);		
-		
-		setData(comboBoxDoctorId, hdb.getUser(Type.Doctor));
+		paneDoctors.setVisible(true);
+
+		setData(comboBoxDoctorId, hdb.getUsers(Type.Doctor));
 	}
 
 	public void onButtonAppointmentsClick() {
@@ -120,14 +122,33 @@ public class AdminViewController extends Main {
 		paneAppointments.setVisible(true);
 	}
 
+	// TODO Also show log files on medications and procedures
 	public void onButtonNotificationsClick() {
 		hide();
 		paneNotifications.setVisible(true);
+		
+		ResultSet rs = hdb.getNotifications();
+		
+		try {
+			while (rs.next()) {
+				textAreaNotifications.setText(rs.getInt(1) + ". " + rs.getString(3) +"\n");
+			}
+		} catch (SQLException e) {
+			System.out.println("An error occurred while reading notifications");
+		}
 	}
 
 	public void onButtonInformationClick() {
 		hide();
 		paneInformation.setVisible(true);
+		
+		Admin user = (Admin)hdb.getUserInfo(userId);
+		
+		labelFirstname.setText("Firstname: " + user.getFirstname());
+		labelLastname.setText("Lastname: " + user.getLastname());
+		labelPhone.setText("Phone: " + user.getPhone());
+		labelEmail.setText("Email: " + user.getEmail());
+		labelSalary.setText("Salary: $" + user.getSalary());
 	}
 
 	public void radioButtonAdminSelected() {
@@ -183,7 +204,7 @@ public class AdminViewController extends Main {
 		String username = textFieldDoctorUsername.getText();
 		String password = passwordFieldDoctorPassword.getText();
 
-		User user = new Doctor(0,firstname, lastname, phone, email, salary);
+		User user = new Doctor(0, firstname, lastname, phone, email, salary);
 
 		createUser(user, username, password);
 	}
@@ -201,14 +222,19 @@ public class AdminViewController extends Main {
 
 		createUser(user, username, password);
 	}
+
 	private void createUser(User user, String username, String password) {
 		HospitalSecurity hs = new HospitalSecurity();
 		hs.newUser(user, username, password);
 	}
 
-	
 	public void onButtonUpdateDoctorClick() {
-		int doctor = comboBoxDoctorId.getValue().getId();
+		// Get doctor id
+		String doctorText = comboBoxDoctorId.getValue();
+		doctorText = doctorText.substring(0, doctorText.indexOf('.'));
+		int doctor = Integer.parseInt(doctorText);
+		
+		// Get raise amount
 		Float raise = 0f;
 		try {
 			raise = Float.parseFloat(textFieldRaiseAmount.getText());
@@ -216,24 +242,49 @@ public class AdminViewController extends Main {
 			System.out.println("Could not raise doctor's salary");
 			return;
 		}
-		
+
 		hdb.raiseDoctorSalary(doctor, raise);
 	}
 
 	public void onButtonBookAppointmentClick() {
 		paneBookAppointment.setVisible(true);
 		paneCancelAppointment.setVisible(false);
+
+		setData(comboBoxPatient, hdb.getUsers(Type.Patient));
+		setData(comboBoxDoctor, hdb.getUsers(Type.Doctor));
 	}
 
 	public void onButtonBookClick() {
+		String patientText = comboBoxPatient.getValue();
+		String doctorText = comboBoxDoctor.getValue();
+		
+		patientText = patientText.substring(0, patientText.indexOf('.'));
+		doctorText = doctorText.substring(0, doctorText.indexOf('.'));
+		
+		int patient = Integer.parseInt(patientText);
+		int doctor = Integer.parseInt(doctorText);
+		
+		LocalDate date = datePickerDate.getValue();
+		
+		String notes = textAreaNotes.getText();
+		
+		hdb.bookAppointment(patient, doctor, date, notes);
 	}
 
 	public void onButtonCancelAppointmentClick() {
 		paneBookAppointment.setVisible(false);
 		paneCancelAppointment.setVisible(true);
+		
+		setData(comboBoxAppointment, hdb.getAllAppointments(Type.Patient));
 	}
 
 	public void onButtonCancelClick() {
+		String appointmentText = comboBoxAppointment.getValue();
+		appointmentText = appointmentText.substring(0, appointmentText.indexOf('.'));
+		
+		int appointment = Integer.parseInt(appointmentText);
+		
+		hdb.cancelAppointment(appointment);
 	}
 
 	public void close() {
@@ -259,10 +310,15 @@ public class AdminViewController extends Main {
 		paneInformation.setVisible(false);
 	}
 
-	private void setData(ComboBox<User> comboBox, List<User> list) {
+	private void setData(ComboBox<String> comboBox, List<?> list) {
 		// Clear combobox
 		comboBox.getItems().clear();
 		// Add items from list
-		comboBox.getItems().addAll(list);
+		int size = list.size();
+		List<String> newList = new ArrayList<String>();
+		for (int i = 0; i < size; i++) {
+			newList.add(list.get(i).toString());
+		}
+		comboBox.getItems().addAll(newList);
 	}
 }

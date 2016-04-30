@@ -103,7 +103,7 @@ public class HospitalSecurity extends Main {
 		}
 
 		// Create statement
-		PreparedStatement stmt = db.prepareStatement("SELECT salt, hash, type FROM users WHERE username=?;");
+		PreparedStatement stmt = db.prepareStatement("SELECT salt, hash, type, user_id FROM users WHERE username=?;");
 		try {
 			stmt.setString(1, username);
 		} catch (SQLException e) {
@@ -131,6 +131,9 @@ public class HospitalSecurity extends Main {
 
 			// Check equality of hashes
 			equal = Arrays.equals(dbHash, inputHash);
+			
+			// get user id
+			userId = rs.getInt(4);
 
 			return equal;
 		} catch (SQLException e) {
