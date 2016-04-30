@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import java.lang.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="385.0" prefWidth="545.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AdminViewController">
    <children>
@@ -81,27 +80,25 @@
                   <Label layoutX="14.0" layoutY="51.0" text="Lastname" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="50.0" />
                   <Label layoutX="14.0" layoutY="86.0" text="Phone" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="85.0" />
                   <Label layoutX="14.0" layoutY="122.0" text="Email" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0" />
-                  <Label layoutX="16.0" layoutY="154.0" text="Doctor ID" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="155.0" />
-                  <Label layoutX="15.0" layoutY="191.0" text="Username" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="190.0" />
-                  <Label layoutX="15.0" layoutY="226.0" text="Password" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="225.0" />
+                  <Label layoutX="15.0" layoutY="155.0" text="Username" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="155.0" />
+                  <Label layoutX="15.0" layoutY="190.0" text="Password" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="190.0" />
                   <TextField fx:id="textFieldPatientFirstname" layoutX="104.0" layoutY="14.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0" />
                   <TextField fx:id="textFieldPatientLastname" layoutX="104.0" layoutY="46.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="45.0" />
                   <TextField fx:id="textFieldPatientPhone" layoutX="104.0" layoutY="81.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="80.0" />
                   <TextField fx:id="textFieldPatientEmail" layoutX="104.0" layoutY="117.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="115.0" />
-                  <TextField fx:id="textFieldPatientDoctor" layoutX="136.0" layoutY="150.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="150.0" />
-                  <TextField fx:id="textFieldPatientUsername" layoutX="136.0" layoutY="186.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="185.0" />
-                  <PasswordField fx:id="passwordFieldPatientPassword" layoutX="136.0" layoutY="221.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="220.0" />
+                  <TextField fx:id="textFieldPatientUsername" layoutX="136.0" layoutY="150.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="150.0" />
+                  <PasswordField fx:id="passwordFieldPatientPassword" layoutX="136.0" layoutY="186.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="185.0" />
                   <Button fx:id="buttonCreatePatient" layoutX="181.0" layoutY="195.0" mnemonicParsing="false" onAction="#onButtonCreatePatientClick" text="Create user" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="paneDoctors" prefHeight="353.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+      <AnchorPane fx:id="paneDoctors" prefHeight="353.0" prefWidth="322.0" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
          <children>
             <Label layoutX="15.0" layoutY="15.0" text="Doctors" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
             <Label layoutX="15.0" layoutY="40.0" text="Doctor id" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="40.0" />
             <Label layoutX="15.0" layoutY="75.0" text="Raise amount" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="75.0" />
-            <TextField fx:id="textFieldDoctorId" layoutX="196.0" layoutY="35.0" prefHeight="25.0" prefWidth="111.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="35.0" />
+            <ComboBox fx:id="comboBoxDoctorId" layoutX="196.0" layoutY="35.0" prefHeight="25.0" prefWidth="111.0" />
             <TextField fx:id="textFieldRaiseAmount" layoutX="196.0" layoutY="70.0" prefHeight="25.0" prefWidth="111.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="70.0" />
             <Button fx:id="buttonUpdateDoctor" mnemonicParsing="false" onAction="#onButtonUpdateDoctorClick" text="Update doctor" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
          </children>

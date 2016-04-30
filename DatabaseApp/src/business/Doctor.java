@@ -4,8 +4,8 @@ public class Doctor extends User {
 
 	private Float salary;
 
-	public Doctor(String firstname, String lastname, String phone, String email, Float salary) {
-		super(firstname, lastname, phone, email);
+	public Doctor(int id, String firstname, String lastname, String phone, String email, Float salary) {
+		super(id, firstname, lastname, phone, email);
 		setSalary(salary);
 	}
 

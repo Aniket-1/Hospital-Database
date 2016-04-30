@@ -1,8 +1,11 @@
 package application;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import business.*;
+import hospital.HospitalDatabase;
 import hospital.HospitalSecurity;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -18,8 +21,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 
-public class AdminViewController {
+public class AdminViewController extends Main {
 
+	private HospitalDatabase hdb = new HospitalDatabase();
+	
 	public MenuBar menuBar;
 	public Menu menuFile;
 	public MenuItem menuItemLogout;
@@ -69,7 +74,7 @@ public class AdminViewController {
 	public Button buttonCreatePatient;
 
 	public AnchorPane paneDoctors;
-	public TextField textFieldDoctorId;
+	public ComboBox<User> comboBoxDoctorId;
 	public TextField textFieldRaiseAmount;
 	public Button buttonUpdateDoctor;
 
@@ -78,8 +83,8 @@ public class AdminViewController {
 	public Button buttonCancelAppointment;
 
 	public AnchorPane paneBookAppointment;
-	public ComboBox<String> comboBoxPatient;
-	public ComboBox<String> comboBoxDoctor;
+	public ComboBox<User> comboBoxPatient;
+	public ComboBox<User> comboBoxDoctor;
 	public DatePicker datePickerDate;
 	public TextArea textAreaNotes;
 	public Button buttonBook;
@@ -105,7 +110,9 @@ public class AdminViewController {
 
 	public void onButtonDoctorsClick() {
 		hide();
-		paneDoctors.setVisible(true);
+		paneDoctors.setVisible(true);		
+		
+		setData(comboBoxDoctorId, hdb.getUser(Type.Doctor));
 	}
 
 	public void onButtonAppointmentsClick() {
@@ -142,8 +149,6 @@ public class AdminViewController {
 	}
 
 	public void onButtonCreateAdminClick() {
-		HospitalSecurity hs = new HospitalSecurity();
-
 		String firstname = textFieldAdminFirstname.getText();
 		String lastname = textFieldAdminLastname.getText();
 		String phone = textFieldAdminPhone.getText();
@@ -152,19 +157,18 @@ public class AdminViewController {
 		try {
 			salary = Float.parseFloat(textFieldAdminSalary.getText());
 		} catch (NumberFormatException e) {
-			System.out.println("Could not create user");
+			System.out.println("Salary is not valid\nCould not create user");
 			return;
 		}
 		String username = textFieldAdminUsername.getText();
 		String password = passwordFieldAdminPassword.getText();
 
-		User user = new Admin(firstname, lastname, phone, email, salary);
-		hs.newUser(user, username, password);
+		User user = new Admin(0, firstname, lastname, phone, email, salary);
+
+		createUser(user, username, password);
 	}
 
 	public void onButtonCreateDoctorClick() {
-		HospitalSecurity hs = new HospitalSecurity();
-
 		String firstname = textFieldDoctorFirstname.getText();
 		String lastname = textFieldDoctorLastname.getText();
 		String phone = textFieldDoctorPhone.getText();
@@ -173,38 +177,47 @@ public class AdminViewController {
 		try {
 			salary = Float.parseFloat(textFieldDoctorSalary.getText());
 		} catch (NumberFormatException e) {
-			System.out.println("Could not create user");
+			System.out.println("Salary is not valid\nCould not create user");
 			return;
 		}
 		String username = textFieldDoctorUsername.getText();
 		String password = passwordFieldDoctorPassword.getText();
 
-		User user = new Doctor(firstname, lastname, phone, email, salary);
-		hs.newUser(user, username, password);
+		User user = new Doctor(0,firstname, lastname, phone, email, salary);
+
+		createUser(user, username, password);
 	}
 
 	public void onButtonCreatePatientClick() {
-		HospitalSecurity hs = new HospitalSecurity();
-
 		String firstname = textFieldPatientFirstname.getText();
 		String lastname = textFieldPatientLastname.getText();
 		String phone = textFieldPatientPhone.getText();
 		String email = textFieldPatientEmail.getText();
-		int doctor = 0;
-		try {
-			doctor = Integer.parseInt(textFieldPatientDoctor.getText());
-		} catch (NumberFormatException e) {
-			System.out.println("Could not create user");
-			return;
-		}
+
 		String username = textFieldPatientUsername.getText();
 		String password = passwordFieldPatientPassword.getText();
 
-		User user = new Patient(firstname, lastname, phone, email, doctor);
+		User user = new Patient(0, firstname, lastname, phone, email);
+
+		createUser(user, username, password);
+	}
+	private void createUser(User user, String username, String password) {
+		HospitalSecurity hs = new HospitalSecurity();
 		hs.newUser(user, username, password);
 	}
 
+	
 	public void onButtonUpdateDoctorClick() {
+		int doctor = comboBoxDoctorId.getValue().getId();
+		Float raise = 0f;
+		try {
+			raise = Float.parseFloat(textFieldRaiseAmount.getText());
+		} catch (NumberFormatException e) {
+			System.out.println("Could not raise doctor's salary");
+			return;
+		}
+		
+		hdb.raiseDoctorSalary(doctor, raise);
 	}
 
 	public void onButtonBookAppointmentClick() {
@@ -234,7 +247,8 @@ public class AdminViewController {
 	}
 
 	public void logout() {
-
+		// Change screen
+		next(false, "Login.fxml", style);
 	}
 
 	private void hide() {
@@ -243,5 +257,12 @@ public class AdminViewController {
 		paneAppointments.setVisible(false);
 		paneNotifications.setVisible(false);
 		paneInformation.setVisible(false);
+	}
+
+	private void setData(ComboBox<User> comboBox, List<User> list) {
+		// Clear combobox
+		comboBox.getItems().clear();
+		// Add items from list
+		comboBox.getItems().addAll(list);
 	}
 }

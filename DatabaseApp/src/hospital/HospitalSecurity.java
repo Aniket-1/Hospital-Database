@@ -49,26 +49,26 @@ public class HospitalSecurity extends Main {
 			String salt = getSalt();
 
 			try {
-				stmt.setString(1, user.getFirstname());
-				stmt.setString(2, user.getLastname());
-				stmt.setString(3, user.getPhone());
-				stmt.setString(4, user.getEmail());
-				stmt.setString(8, username);
-				stmt.setString(9, salt);
-				stmt.setBytes(10, hash(password, salt));
+				stmt.setString(4, user.getFirstname());
+				stmt.setString(5, user.getLastname());
+				stmt.setString(6, user.getPhone());
+				stmt.setString(7, user.getEmail());
+				stmt.setString(1, username);
+				stmt.setString(2, salt);
+				stmt.setBytes(3, hash(password, salt));
 
 				if (user instanceof Patient) {
-					stmt.setObject(5, null);
-					stmt.setInt(6, ((Patient) user).getDoctor());
-					stmt.setString(7, "Patient");
+					stmt.setObject(8, null);
+					stmt.setObject(9, null);
+					stmt.setString(10, "Patient");
 				} else if (user instanceof Doctor) {
-					stmt.setFloat(5, ((Doctor) user).getSalary());
-					stmt.setObject(6, null);
-					stmt.setString(7, "Doctor");
+					stmt.setFloat(8, ((Doctor) user).getSalary());
+					stmt.setObject(9, null);
+					stmt.setString(10, "Doctor");
 				} else {
-					stmt.setFloat(5, ((Admin) user).getSalary());
-					stmt.setObject(6, null);
-					stmt.setString(7, "Admin");
+					stmt.setFloat(8, ((Admin) user).getSalary());
+					stmt.setObject(9, null);
+					stmt.setString(10, "Admin");
 				}
 			} catch (SQLException e) {
 			}

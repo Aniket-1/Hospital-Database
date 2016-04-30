@@ -9,7 +9,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 
-public class DoctorViewController {
+public class DoctorViewController extends Main {
 
 	public MenuBar menuBar;
 	public Menu menuFile;
@@ -23,49 +23,49 @@ public class DoctorViewController {
 	public Button buttonInvoices;
 	public Button buttonMedications;
 	public Button buttonInformation;
-	
+
 	public AnchorPane paneAppointments;
-	
+
 	public AnchorPane panePatients;
-	
+
 	public AnchorPane paneProcedures;
-	
+
 	public AnchorPane paneInvoices;
-	
+
 	public AnchorPane paneMedications;
-	
+
 	public AnchorPane paneInformation;
 	public Label labelFirstname;
 	public Label labelLastname;
 	public Label labelPhone;
 	public Label labelEmail;
 	public Label labelSalary;
-	
+
 	public void onButtonAppointmentsClick() {
 		hide();
 		paneAppointments.setVisible(true);
 	}
-	
+
 	public void onButtonPatientsClick() {
 		hide();
-		panePatients.setVisible(true);		
+		panePatients.setVisible(true);
 	}
-	
+
 	public void onButtonProceduresClick() {
 		hide();
-		paneProcedures.setVisible(true);		
+		paneProcedures.setVisible(true);
 	}
-	
+
 	public void onButtonInvoicesClick() {
 		hide();
 		paneInvoices.setVisible(true);
 	}
-	
+
 	public void onButtonMedicationsClick() {
 		hide();
 		paneMedications.setVisible(true);
 	}
-	
+
 	public void onButtonInformationClick() {
 		hide();
 		paneInformation.setVisible(true);
@@ -82,7 +82,8 @@ public class DoctorViewController {
 	}
 
 	public void logout() {
-
+		// Change screen
+		next(false, "Login.fxml", style);
 	}
 
 	private void hide() {

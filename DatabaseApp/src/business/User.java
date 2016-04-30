@@ -2,12 +2,15 @@ package business;
 
 public class User {
 
+	int id;
 	String firstname;
 	String lastname;
 	String phone;
 	String email;
 
-	public User(String firstname, String lastname, String phone, String email) {
+	public User(int id, String firstname, String lastname, String phone, String email) {
+
+		this.id = id;
 
 		if (validate(firstname)) {
 			this.firstname = firstname;
@@ -19,6 +22,10 @@ public class User {
 
 		setPhone(phone);
 		setEmail(email);
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getFirstname() {
@@ -51,5 +58,10 @@ public class User {
 
 	private boolean validate(String string) {
 		return string != null && !string.trim().equals("");
+	}
+	
+	@Override
+	public String toString() {
+		return id + ". " + firstname + " " + lastname;
 	}
 }

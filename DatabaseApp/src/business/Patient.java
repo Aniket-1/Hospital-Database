@@ -2,18 +2,17 @@ package business;
 
 public class Patient extends User {
 
-	private int doctor;
+	private String notes;
 
-	public Patient(String firstname, String lastname, String phone, String email, int doctor) {
-		super(firstname, lastname, phone, email);
-		setDoctor(doctor);
+	public Patient(int id, String firstname, String lastname, String phone, String email) {
+		super(id, firstname, lastname, phone, email);
 	}
 
-	public int getDoctor() {
-		return doctor;
+	public String getNotes() {
+		return notes;
 	}
 
-	public void setDoctor(int doctor) {
-		this.doctor = doctor;
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 }

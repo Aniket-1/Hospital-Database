@@ -10,13 +10,13 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 
-public class PatientViewController {
+public class PatientViewController extends Main {
 
 	public MenuBar menuBar;
 	public Menu menuFile;
 	public MenuItem menuItemLogout;
 	public MenuItem menuItemClose;
-	
+
 	public AnchorPane paneMenu;
 	public Button buttonAppointments;
 	public Button buttonPrescriptions;
@@ -74,13 +74,13 @@ public class PatientViewController {
 	public void onNotesClick() {
 		hide();
 		paneNotes.setVisible(true);
-		
+
 		String results = null;
 		labelNotes.setText(results);
 	}
-	
+
 	private void displayList(ListView<String> listView, String results) {
-		
+
 	}
 
 	public void close() {
@@ -94,7 +94,8 @@ public class PatientViewController {
 	}
 
 	public void logout() {
-
+		// Change screen
+		next(false, "Login.fxml", style);
 	}
 
 	private void hide() {

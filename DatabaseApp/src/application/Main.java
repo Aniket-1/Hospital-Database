@@ -1,16 +1,14 @@
 package application;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import connector.DatabaseConnector;
-import hospital.HospitalSecurity;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
-//import javafx.scene.image.Image;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.fxml.FXMLLoader;
 
@@ -32,6 +30,7 @@ public class Main extends Application {
 		String username = "CS1430196";
 		String password = "truskimp";
 
+		// FIXME Remove this
 		url = "jdbc:mysql://localhost/hospital";
 		username = "jeegna";
 		password = "password";
@@ -43,14 +42,6 @@ public class Main extends Application {
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("VendorError: " + e.getErrorCode());
 		}
-	
-		// Create initial user
-//		HospitalSecurity hs = new HospitalSecurity();
-//		String salt = hs.getSalt();
-//		PreparedStatement s = db.prepareStatement("insert into users values(null, 'Jeegna', 'Patel', '(514) 123-4567', 'jeegnapatel@gmail.com', null, null, 'Admin', 'jeegna', ?, ?);");
-//		s.setString(1, salt);
-//		s.setBytes(2, hs.hash(password, salt));
-//		db.executeUpdateStatement(s);
 
 		launch(args);
 	}
@@ -94,8 +85,7 @@ public class Main extends Application {
 		// Set stage
 		Main.primaryStage = primaryStage;
 		primaryStage.setResizable(false);
-		// primaryStage.getIcons().add(new
-		// Image("http://education.oracle.com/education/images/streams_web/database-stream-icon.png"));
+		primaryStage.getIcons().add(new Image("http://icons.iconarchive.com/icons/gcds/halloween/64/grim-reaper-icon.png"));
 
 		// Say "Bye" on exit because that's adorable
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -133,7 +123,7 @@ public class Main extends Application {
 
 		// Set title, width and height
 		String title = "Login";
-		int height = 140;
+		int height = 170;
 		int width = 300;
 
 		if (isLogin) {
