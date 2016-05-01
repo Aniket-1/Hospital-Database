@@ -158,6 +158,33 @@ public class HospitalDatabase extends Main {
 		return list;
 	}
 
+	public List<String> getAppointments(int doctor) {
+		List<String> list = new ArrayList<String>();
+
+		PreparedStatement statement = db.prepareStatement(
+				"SELECT appointment_id, firstname, lastname, date "
+						+ "FROM appointments "
+						+ "INNER JOIN users ON user_id=patient_id "
+						+ "WHERE doctor_id=? "
+						+ "AND date > CURDATE() "
+						+ "ORDER BY date DESC;");
+		try {
+			statement.setInt(1, doctor);
+			ResultSet rs = db.executeStatement(statement);
+
+			while (rs.next()) {
+				String entry = rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(3) + " on " + rs.getDate(4);
+				list.add(entry);
+			}
+
+			rs.close();
+		} catch (SQLException e) {
+			System.out.println("An error occurred while reading appointments");
+		}
+
+		return list;
+	}
+	
 	public List<String> getAllAppointments(Type type) {
 		List<String> list = new ArrayList<String>();
 
@@ -186,8 +213,7 @@ public class HospitalDatabase extends Main {
 			return;
 		}
 
-		PreparedStatement statement = db.prepareStatement(
-				"INSERT INTO appointments (patient_id, doctor_id, date, notes) VALUES " + "(?, ?, ?, ?);");
+		PreparedStatement statement = db.prepareStatement("CALL book_appointment(?, ?, ?, ?);");
 		try {
 			statement.setInt(1, patient);
 			statement.setInt(2, doctor);
@@ -231,25 +257,88 @@ public class HospitalDatabase extends Main {
 		return list;
 	}
 
-	// TODO
 	public List<String> getLogs() {
-		ResultSet rs = db.executeStatement("SELECT * FROM log_medications;");
+		ResultSet rs = db.executeStatement("SELECT * FROM logs_admin;");
 
 		List<String> list = new ArrayList<String>();
 		try {
 			while (rs.next()) {
-				list.add(rs.getInt(1) + ". " + rs.getString(3));
+				list.add(rs.getDate(2) + ": " + rs.getString(3));
 			}
 		} catch (SQLException e) {
 			System.out.println("An error occurred while reading notifications");
 		}
 
-		rs = db.executeStatement("SELECT * FROM log_procedures;");
-
 		return list;
 	}
 
 	// Doctor view
+	public List<String> getAllProcedures() {
+		List<String> list = new ArrayList<String>();
+
+		PreparedStatement statement = db.prepareStatement("SELECT procedure_id, procedure_name " + "FROM procedures;");
+
+		try {
+			ResultSet rs = db.executeStatement(statement);
+
+			while (rs.next()) {
+				list.add(rs.getInt(1) + ". " + rs.getString(2));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			System.out.println("An error occurred while fetching procedures");
+		}
+
+		return list;
+	}
+
+	public void performProcedure(int patient, int procedure, int doctor) {
+		PreparedStatement statement = db.prepareStatement("CALL perform_procedure(?, ?, ?);");
+
+		try {
+			statement.setInt(1, patient);
+			statement.setInt(2, procedure);
+			statement.setInt(3, doctor);
+
+			db.executeUpdateStatement(statement);
+			System.out.println("Successfully performed procedure. Patient is A-OK");
+		} catch (SQLException e) {
+			System.out.println("An error occurred while performing procedure. RIP patient");
+		}
+	}
+
+	public void prescribeMedication(int patient, int medication, int doctor) {
+		PreparedStatement statement = db.prepareStatement("CALL prescribe_medication(?, ?, ?);");
+
+		try {
+			statement.setInt(1, patient);
+			statement.setInt(2, medication);
+			statement.setInt(3, doctor);
+
+			db.executeStatement(statement);
+			System.out.println("Successfully prescribed medication");
+		} catch (SQLException e) {
+			System.out.println("An error occurred while prescribing medication");
+		}
+	}
+
+	public List<String> getMedications() {
+		List<String> list = new ArrayList<String>();
+		PreparedStatement statement = db.prepareStatement("CALL get_medications();");
+
+		try {
+			ResultSet rs = db.executeStatement(statement);
+
+			while (rs.next()) {
+				list.add(rs.getInt(1) + ". " + rs.getString(2));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			System.out.println("An error occurred while reading medications");
+		}
+
+		return list;
+	}
 
 	// Patient view
 	public List<String> getPatientPrescriptions(int patient) {
@@ -275,7 +364,7 @@ public class HospitalDatabase extends Main {
 
 			ResultSet rs = db.executeStatement(statement);
 			while (rs.next()) {
-				list.add(rs.getString(1));
+				list.add(rs.getString(2));
 			}
 		} catch (SQLException e) {
 		}
@@ -284,16 +373,13 @@ public class HospitalDatabase extends Main {
 
 	public List<String> getPatientInvoices(int patient) {
 		List<String> list = new ArrayList<String>();
-		PreparedStatement statement = db.prepareStatement(
-				"SELECT invoice_amount FROM invoices "
-						+ "WHERE patient_id=? "
-						+ "ORDER BY invoice_id DESC;");
+		PreparedStatement statement = db.prepareStatement("CALL get_invoices(?);");
 		try {
 			statement.setInt(1, patient);
 
 			ResultSet rs = db.executeStatement(statement);
 			while (rs.next()) {
-				list.add("Invoice amount: $" + rs.getFloat(1));
+				list.add(rs.getInt(1) + ". Invoice amount: $" + rs.getFloat(2));
 			}
 		} catch (SQLException e) {
 		}
@@ -303,16 +389,12 @@ public class HospitalDatabase extends Main {
 	public List<String> getFamilyDoctors(int patient) {
 		List<String> list = new ArrayList<String>();
 
-		PreparedStatement statement = db.prepareStatement(
-				"SELECT doctor_id, firstname, lastname "
-						+ "FROM family_doctors "
-						+ "INNER JOIN users ON user_id=doctor_id "
-						+ "WHERE patient_id=?;");
+		PreparedStatement statement = db.prepareStatement("CALL get_family_doctors(?);");
 
 		try {
 			statement.setInt(1, patient);
 			ResultSet rs = db.executeStatement(statement);
-			
+
 			rs.next();
 			list.add(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(3));
 
@@ -327,16 +409,13 @@ public class HospitalDatabase extends Main {
 	public List<String> getSpecialists() {
 		List<String> list = new ArrayList<String>();
 
-		PreparedStatement statement = db.prepareStatement(
-				"SELECT DISTINCT doctor_id, firstname, lastname "
-						+ "FROM users "
-						+ "INNER JOIN procedures_doctors ON user_id=doctor_id;");
+		PreparedStatement statement = db.prepareStatement("CALL get_specialists();");
 
 		try {
 			ResultSet rs = db.executeStatement(statement);
-			
+
 			while (rs.next()) {
-				list.add(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(3));
+				list.add(rs.getInt(1) + ". " + rs.getString(2) + " " + rs.getString(3) + " for " + rs.getString(4));
 			}
 
 			rs.close();

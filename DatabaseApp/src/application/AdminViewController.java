@@ -1,6 +1,5 @@
 package application;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -138,7 +137,7 @@ public class AdminViewController extends Main {
 		hide();
 		paneNotifications.setVisible(true);
 
-		List<String> list = hdb.getNotifications();
+		List<String> list = hdb.getLogs();
 
 		for (int i = 0; i < list.size(); i++) {
 			textAreaNotifications.setText(list.get(i));
@@ -321,6 +320,11 @@ public class AdminViewController extends Main {
 	private void setData(ComboBox<String> comboBox, List<?> list) {
 		// Clear combobox
 		comboBox.getItems().clear();
+		
+		if (list.size() == 0) {
+			return;
+		}
+		
 		// Add items from list
 		int size = list.size();
 		List<String> newList = new ArrayList<String>();

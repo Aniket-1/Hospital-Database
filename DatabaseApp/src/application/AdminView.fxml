@@ -26,7 +26,7 @@
             <Separator orientation="VERTICAL" prefHeight="354.0" prefWidth="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="paneCreateUser" prefHeight="354.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+      <AnchorPane fx:id="paneCreateUser" prefHeight="354.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
          <children>
             <Label layoutX="15.0" layoutY="15.0" prefHeight="15.0" prefWidth="104.0" text="Create Account" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
             <RadioButton fx:id="rButtonAdmin" layoutX="15.0" layoutY="40.0" mnemonicParsing="false" onAction="#radioButtonAdminSelected" selected="true" text="Admin" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="40.0">
@@ -93,7 +93,7 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="paneDoctors" prefHeight="353.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+      <AnchorPane fx:id="paneDoctors" prefHeight="353.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
          <children>
             <Label layoutX="15.0" layoutY="15.0" text="Doctors" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
             <Label layoutX="15.0" layoutY="40.0" text="Doctor id" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="40.0" />
@@ -103,7 +103,7 @@
             <Button fx:id="buttonUpdateDoctor" mnemonicParsing="false" onAction="#onButtonUpdateDoctorClick" text="Update doctor" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="paneAppointments" prefHeight="354.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+      <AnchorPane fx:id="paneAppointments" prefHeight="354.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
          <children>
             <Label layoutX="15.0" layoutY="15.0" text="Appointments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
             <Button fx:id="buttonBookAppointment" layoutX="15.0" layoutY="50.0" mnemonicParsing="false" onAction="#onButtonBookAppointmentClick" prefHeight="25.0" prefWidth="171.0" text="Book an appointment" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="50.0" />
@@ -114,10 +114,10 @@
                   <Label text="Doctor" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="50.0" />
                   <Label layoutX="14.0" layoutY="82.0" text="Date" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="85.0" />
                   <Label layoutX="13.0" layoutY="117.0" text="Notes" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0" />
-                  <ComboBox fx:id="comboBoxPatient" prefWidth="150.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0" />
-                  <ComboBox fx:id="comboBoxDoctor" prefWidth="150.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="45.0" />
-                  <DatePicker fx:id="datePickerDate" layoutX="124.0" layoutY="80.0" prefHeight="25.0" prefWidth="150.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="80.0" />
-                  <TextArea fx:id="textAreaNotes" layoutX="74.0" layoutY="111.0" prefHeight="70.0" prefWidth="200.0" wrapText="true" AnchorPane.bottomAnchor="49.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="115.0" />
+                  <ComboBox fx:id="comboBoxPatient" prefHeight="25.0" prefWidth="212.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0" />
+                  <ComboBox fx:id="comboBoxDoctor" prefHeight="25.0" prefWidth="212.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="45.0" />
+                  <DatePicker fx:id="datePickerDate" layoutX="124.0" layoutY="80.0" prefHeight="25.0" prefWidth="212.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="80.0" />
+                  <TextArea fx:id="textAreaNotes" layoutX="74.0" layoutY="111.0" prefHeight="71.0" prefWidth="212.0" wrapText="true" AnchorPane.bottomAnchor="49.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="115.0" />
                   <Button fx:id="buttonBook" layoutX="213.0" layoutY="194.0" mnemonicParsing="false" onAction="#onButtonBookClick" text="Book Appointment" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children></AnchorPane>
             <AnchorPane fx:id="paneCancelAppointment" layoutY="125.0" prefHeight="229.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
@@ -129,13 +129,13 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="paneNotifications" prefHeight="354.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+      <AnchorPane fx:id="paneNotifications" prefHeight="354.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
          <children>
             <Label layoutX="15.0" layoutY="42.0" text="Notifications" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
             <TextArea fx:id="textAreaNotifications" editable="false" layoutX="14.0" layoutY="70.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="40.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="paneInformation" prefHeight="354.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+      <AnchorPane fx:id="paneInformation" prefHeight="354.0" prefWidth="322.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
          <children>
             <Label layoutX="15.0" layoutY="15.0" text="Personal Information" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
             <Label fx:id="labelFirstname" layoutX="15.0" layoutY="50.0" text="Firstname: " AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="50.0" />

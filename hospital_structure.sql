@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS notifications;
-DROP TABLE IF EXISTS log_prescriptions;
-DROP TABLE IF EXISTS log_procedures;
+DROP TABLE IF EXISTS logs_admin;
 DROP TABLE IF EXISTS log_create_user;
 DROP TABLE IF EXISTS log_raise;
 
@@ -10,9 +9,8 @@ DROP TABLE IF EXISTS procedures_patients;
 DROP TABLE IF EXISTS procedures_doctors;
 DROP TABLE IF EXISTS procedures;
 
-DROP TABLE IF EXISTS prescriptions_medications;
-DROP TABLE IF EXISTS medications;
 DROP TABLE IF EXISTS prescriptions;
+DROP TABLE IF EXISTS medications;
 
 DROP TABLE IF EXISTS appointments;
 
@@ -57,13 +55,6 @@ CREATE TABLE `appointments` (
 		REFERENCES `users`(`user_id`)
 );
 
-CREATE TABLE `prescriptions` (
-	`prescription_id` INT PRIMARY KEY AUTO_INCREMENT,
-	`patient_id` INT,
-    FOREIGN KEY (`patient_id`)
-		REFERENCES `users`(`user_id`)
-);
-
 CREATE TABLE `medications` (
 	`medication_id` INT PRIMARY KEY AUTO_INCREMENT,
     `medication_name` VARCHAR(255) NOT NULL,
@@ -71,11 +62,12 @@ CREATE TABLE `medications` (
     `stock` INT NOT NULL
 );
 
-CREATE TABLE `prescriptions_medications` (
-    `prescription_id` INT,
+CREATE TABLE `prescriptions` (
+	`prescription_id` INT PRIMARY KEY AUTO_INCREMENT,
+	`patient_id` INT,
     `medication_id` INT,
-    FOREIGN KEY (`prescription_id`)
-		REFERENCES `prescriptions`(`prescription_id`),
+    FOREIGN KEY (`patient_id`)
+		REFERENCES `users`(`user_id`),
     FOREIGN KEY (`medication_id`)
 		REFERENCES `medications`(`medication_id`)
 );
@@ -125,13 +117,7 @@ CREATE TABLE `log_raise` (
     `entry` VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE `log_procedures` (
-	`log_id` INT PRIMARY KEY AUTO_INCREMENT,
-	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `entry` VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE `log_prescriptions` (
+CREATE TABLE `logs_admin` (
 	`log_id` INT PRIMARY KEY AUTO_INCREMENT,
 	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `entry` VARCHAR(255) NOT NULL

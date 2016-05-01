@@ -85,7 +85,7 @@ public class PatientViewController extends Main {
 		displayList(listPrescriptions, results);
 	}
 
-	public void onPorceduresClick() {
+	public void onProceduresClick() {
 		hide();
 		paneProcedures.setVisible(true);
 
@@ -166,6 +166,11 @@ public class PatientViewController extends Main {
 	private void setData(ComboBox<String> comboBox, List<?> list) {
 		// Clear combobox
 		comboBox.getItems().clear();
+		
+		if (list.size() == 0) {
+			return;
+		}
+		
 		// Add items from list
 		int size = list.size();
 		List<String> newList = new ArrayList<String>();

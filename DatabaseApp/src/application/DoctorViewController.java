@@ -1,6 +1,7 @@
 package application;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -31,14 +33,14 @@ public class DoctorViewController extends Main {
 	public MenuItem menuItemClose;
 
 	public AnchorPane paneMenu;
-	public Button buttonAppointments;
+	public Button buttonViewAppointments;
 	public Button buttonPatients;
 	public Button buttonProcedures;
-	public Button buttonInvoices;
 	public Button buttonMedications;
 	public Button buttonInformation;
+	public Button buttonAppointments;
 
-	public AnchorPane paneAppointments;
+	public AnchorPane paneViewAppointments;
 	public ListView<String> listUpcomingAppointments;
 	public ListView<String> listPastAppointments;
 
@@ -53,10 +55,13 @@ public class DoctorViewController extends Main {
 
 	public AnchorPane paneProcedures;
 	public ComboBox<String> comboBoxDoctorPatients;
-
-	public AnchorPane paneInvoices;
+	public ComboBox<String> comboBoxProcedures;
+	public Button buttonPerformProcedure;
 
 	public AnchorPane paneMedications;
+	public ComboBox<String> comboBoxMedicationPatient;
+	public ComboBox<String> comboBoxMedications;
+	public Button buttonPrescribeMedication;
 
 	public AnchorPane paneInformation;
 	public Label labelFirstname;
@@ -64,10 +69,24 @@ public class DoctorViewController extends Main {
 	public Label labelPhone;
 	public Label labelEmail;
 	public Label labelSalary;
+	
+	public AnchorPane paneAppointments;
+	public Button buttonBookAppointment;
+	public Button buttonCancelAppointment;
 
-	public void onAppointmentsClick() {
+	public AnchorPane paneBookAppointment;
+	public ComboBox<String> comboBoxPatient;
+	public DatePicker datePickerDate;
+	public TextArea textAreaNotes;
+	public Button buttonBook;
+
+	public AnchorPane paneCancelAppointment;
+	public ComboBox<String> comboBoxAppointment;
+	public Button buttonCancel;
+
+	public void onViewAppointmentsClick() {
 		hide();
-		paneAppointments.setVisible(true);
+		paneViewAppointments.setVisible(true);
 
 		ObservableList<String> upcoming = FXCollections
 				.observableArrayList(hdb.getUpcomingAppointments(userId, Type.Doctor, Type.Patient));
@@ -113,18 +132,41 @@ public class DoctorViewController extends Main {
 	public void onProceduresClick() {
 		hide();
 		paneProcedures.setVisible(true);
-		
-		
+
+		setData(comboBoxDoctorPatients, hdb.getAllUsers(Type.Patient));
+		setData(comboBoxProcedures, hdb.getAllProcedures());
 	}
 
-	public void onInvoicesClick() {
-		hide();
-		paneInvoices.setVisible(true);
+	public void onPerformProcedureClick() {
+		String patientText = comboBoxDoctorPatients.getValue();
+		patientText = patientText.substring(0, patientText.indexOf('.'));
+		int patient = Integer.parseInt(patientText);
+
+		String procedureText = comboBoxProcedures.getValue();
+		procedureText = procedureText.substring(0, procedureText.indexOf('.'));
+		int procedure = Integer.parseInt(procedureText);
+
+		hdb.performProcedure(patient, procedure, userId);
 	}
 
 	public void onMedicationsClick() {
 		hide();
 		paneMedications.setVisible(true);
+
+		setData(comboBoxMedicationPatient, hdb.getAllUsers(Type.Patient));
+		setData(comboBoxMedications, hdb.getMedications());
+	}
+
+	public void onPrescribeMedicationClick() {
+		String patientText = comboBoxMedicationPatient.getValue();
+		patientText = patientText.substring(0, patientText.indexOf('.'));
+		int patient = Integer.parseInt(patientText);
+
+		String medicationText = comboBoxMedications.getValue();
+		medicationText = medicationText.substring(0, medicationText.indexOf('.'));
+		int medication = Integer.parseInt(medicationText);
+
+		hdb.prescribeMedication(patient, medication, userId);
 	}
 
 	public void onInformationClick() {
@@ -140,6 +182,50 @@ public class DoctorViewController extends Main {
 		labelSalary.setText("Salary: $" + user.getSalary());
 	}
 
+	public void onAppointmentsClick() {
+		hide();
+		paneAppointments.setVisible(true);
+		paneBookAppointment.setVisible(false);
+		paneCancelAppointment.setVisible(false);
+	}
+	
+	public void onButtonBookAppointmentClick() {
+		paneBookAppointment.setVisible(true);
+		paneCancelAppointment.setVisible(false);
+
+		setData(comboBoxPatient, hdb.getAllUsers(Type.Patient));
+	}
+
+	public void onButtonBookClick() {
+		String patientText = comboBoxPatient.getValue();
+
+		patientText = patientText.substring(0, patientText.indexOf('.'));
+
+		int patient = Integer.parseInt(patientText);
+
+		LocalDate date = datePickerDate.getValue();
+
+		String notes = textAreaNotes.getText();
+
+		hdb.bookAppointment(patient, userId, date, notes);
+	}
+
+	public void onButtonCancelAppointmentClick() {
+		paneBookAppointment.setVisible(false);
+		paneCancelAppointment.setVisible(true);
+
+		setData(comboBoxAppointment, hdb.getAppointments(userId));
+	}
+
+	public void onButtonCancelClick() {
+		String appointmentText = comboBoxAppointment.getValue();
+		appointmentText = appointmentText.substring(0, appointmentText.indexOf('.'));
+
+		int appointment = Integer.parseInt(appointmentText);
+
+		hdb.cancelAppointment(appointment);
+	}
+	
 	public void close() {
 		logout();
 		try {
@@ -160,17 +246,22 @@ public class DoctorViewController extends Main {
 	}
 
 	private void hide() {
-		paneAppointments.setVisible(false);
+		paneViewAppointments.setVisible(false);
 		panePatients.setVisible(false);
 		paneProcedures.setVisible(false);
-		paneInvoices.setVisible(false);
 		paneMedications.setVisible(false);
 		paneInformation.setVisible(false);
+		paneAppointments.setVisible(false);
 	}
 
 	private void setData(ComboBox<String> comboBox, List<?> list) {
 		// Clear combobox
 		comboBox.getItems().clear();
+
+		if (list.size() == 0) {
+			return;
+		}
+
 		// Add items from list
 		int size = list.size();
 		List<String> newList = new ArrayList<String>();
