@@ -1,7 +1,3 @@
-DROP TRIGGER IF EXISTS after_users_insert;
-DROP TRIGGER IF EXISTS after_medications_update;
-DROP TRIGGER IF EXISTS after_procedures_insert;
-
 DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS log_prescriptions;
 DROP TABLE IF EXISTS log_procedures;
@@ -21,29 +17,29 @@ DROP TABLE IF EXISTS prescriptions;
 DROP TABLE IF EXISTS appointments;
 
 DROP TABLE IF EXISTS family_doctors;
-DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS users;
 
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
 	`user_id` INT PRIMARY KEY AUTO_INCREMENT,
 	`username` VARCHAR(50) UNIQUE NOT NULL,
 	`salt` VARCHAR(30),
 	`hash` VARBINARY(256),
     `firstname` VARCHAR(50) NOT NULL,
 	`lastname` VARCHAR(50) NOT NULL,
-	-- format: (000) 000-0000
+	-- format: 1234567890
 	`phone` VARCHAR(10) NOT NULL,
 	`email` VARCHAR(255) NOT NULL,
     -- (only for admins and doctors)
     `salary` FLOAT,
-    -- (only for patients) patient's notes and family doctor
+    -- (only for patients) patient's notes
     `notes` VARCHAR(255),
-    `type` ENUM('Admin','Doctor','Patient') NOT NULL
+    `type` ENUM('Admin', 'Doctor', 'Patient') NOT NULL
 );
 
 CREATE TABLE `family_doctors` (
-	`user_id` INT,
+	`patient_id` INT,
     `doctor_id` INT,
-	FOREIGN KEY (`user_id`)
+	FOREIGN KEY (`patient_id`)
 		REFERENCES `users`(`user_id`),
 	FOREIGN KEY (`doctor_id`)
 		REFERENCES `users`(`user_id`)
@@ -53,8 +49,7 @@ CREATE TABLE `appointments` (
 	`appointment_id` INT PRIMARY KEY AUTO_INCREMENT,
     `patient_id` INT,
     `doctor_id` INT,
-    -- format: 'YYYY-MM-DD HH:MM:SS'
-    `date` DATETIME NOT NULL,
+    `date` DATE NOT NULL,
     `notes` VARCHAR(255),
     FOREIGN KEY (`patient_id`)
 		REFERENCES `users`(`user_id`),
@@ -120,65 +115,37 @@ CREATE TABLE `invoices` (
 -- Log tables
 CREATE TABLE `log_create_user` (
 	`log_id` INT PRIMARY KEY AUTO_INCREMENT,
-	`time` DATETIME NOT NULL DEFAULT NOW(),
+	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `entry` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE `log_raise` (
 	`log_id` INT PRIMARY KEY AUTO_INCREMENT,
-	`time` DATETIME NOT NULL DEFAULT NOW(),
+	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `entry` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE `log_procedures` (
 	`log_id` INT PRIMARY KEY AUTO_INCREMENT,
-	`time` DATETIME NOT NULL DEFAULT NOW(),
+	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `entry` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE `log_prescriptions` (
 	`log_id` INT PRIMARY KEY AUTO_INCREMENT,
-	`time` DATETIME NOT NULL DEFAULT NOW(),
+	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `entry` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE `notifications` (
 	`notification_id` INT PRIMARY KEY AUTO_INCREMENT,
-    `time` DATETIME NOT NULL DEFAULT NOW(),
+	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `entry` VARCHAR(255) NOT NULL
 );
 
-DELIMITER //
-CREATE TRIGGER after_users_insert AFTER INSERT ON users FOR EACH ROW
-BEGIN
-	INSERT INTO `log_create_user` VALUES (NULL, NOW(), CONCAT("User ", NEW.username, " created"));
-END //
-
-CREATE TRIGGER after_medications_update AFTER UPDATE ON medications FOR EACH ROW
-BEGIN
-	IF NEW.stock < 6 THEN
-		INSERT INTO notifications (entry) VALUES (CONCAT("Medication ", NEW.medication_name, " stock is below 5"));
-	END IF;
-END //
-
-CREATE TRIGGER after_prescriptions_insert AFTER INSERT ON prescriptions FOR EACH ROW
-BEGIN
-	INSERT INTO log_procedures VALUES (null, NOW(), CONCAT("Prescription for "));
-END //
-
-CREATE TRIGGER after_procedures_insert AFTER INSERT ON procedures FOR EACH ROW
-BEGIN
-	INSERT INTO log_procedures VALUES (null, NOW(), CONCAT("Procedure on "));
-END //
-DELIMITER ;
-
--- CREATE INDEX `idx_book__genre` ON `book` (`genre`);
-
--- INSERT INTO book VALUES
--- (null,'','2008-02-01',0),
--- (null, '', '3952-02-12', 0);
+-- CREATE INDEX `idx_table_name` ON `table` (`column`);
 
 -- default user with admin privileges.
-INSERT INTO users VALUES (null, 'root', null, null, 'root', 'user', '51471NUX<3', 'root@root.com', null, null, 'Admin');
+-- INSERT INTO users VALUES (null, 'root', null, null, 'root', 'user', '5141234567', 'root@root.com', null, null, 'Admin');
 
 COMMIT;

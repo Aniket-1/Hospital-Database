@@ -114,7 +114,7 @@ public class AdminViewController extends Main {
 		hide();
 		paneDoctors.setVisible(true);
 
-		setData(comboBoxDoctorId, hdb.getUsers(Type.Doctor));
+		setData(comboBoxDoctorId, hdb.getAllUsers(Type.Doctor));
 	}
 
 	public void onButtonAppointmentsClick() {
@@ -126,24 +126,31 @@ public class AdminViewController extends Main {
 	public void onButtonNotificationsClick() {
 		hide();
 		paneNotifications.setVisible(true);
-		
-		ResultSet rs = hdb.getNotifications();
-		
-		try {
-			while (rs.next()) {
-				textAreaNotifications.setText(rs.getInt(1) + ". " + rs.getString(3) +"\n");
-			}
-		} catch (SQLException e) {
-			System.out.println("An error occurred while reading notifications");
+
+		List<String> list = hdb.getNotifications();
+
+		for (int i = 0; i < list.size(); i++) {
+			textAreaNotifications.setText(list.get(i));
+		}
+	}
+	
+	public void onButtonLogsClick() {
+		hide();
+		paneNotifications.setVisible(true);
+
+		List<String> list = hdb.getNotifications();
+
+		for (int i = 0; i < list.size(); i++) {
+			textAreaNotifications.setText(list.get(i));
 		}
 	}
 
 	public void onButtonInformationClick() {
 		hide();
 		paneInformation.setVisible(true);
-		
-		Admin user = (Admin)hdb.getUserInfo(userId);
-		
+
+		Admin user = (Admin) hdb.getUserInfo(userId);
+
 		labelFirstname.setText("Firstname: " + user.getFirstname());
 		labelLastname.setText("Lastname: " + user.getLastname());
 		labelPhone.setText("Phone: " + user.getPhone());
@@ -232,8 +239,7 @@ public class AdminViewController extends Main {
 		// Get doctor id
 		String doctorText = comboBoxDoctorId.getValue();
 		doctorText = doctorText.substring(0, doctorText.indexOf('.'));
-		int doctor = Integer.parseInt(doctorText);
-		
+
 		// Get raise amount
 		Float raise = 0f;
 		try {
@@ -243,47 +249,49 @@ public class AdminViewController extends Main {
 			return;
 		}
 
-		hdb.raiseDoctorSalary(doctor, raise);
+		Doctor doctor = new Doctor(Integer.parseInt(doctorText), null, null, null, null, raise);
+
+		hdb.updateUser(doctor);
 	}
 
 	public void onButtonBookAppointmentClick() {
 		paneBookAppointment.setVisible(true);
 		paneCancelAppointment.setVisible(false);
 
-		setData(comboBoxPatient, hdb.getUsers(Type.Patient));
-		setData(comboBoxDoctor, hdb.getUsers(Type.Doctor));
+		setData(comboBoxPatient, hdb.getAllUsers(Type.Patient));
+		setData(comboBoxDoctor, hdb.getAllUsers(Type.Doctor));
 	}
 
 	public void onButtonBookClick() {
 		String patientText = comboBoxPatient.getValue();
 		String doctorText = comboBoxDoctor.getValue();
-		
+
 		patientText = patientText.substring(0, patientText.indexOf('.'));
 		doctorText = doctorText.substring(0, doctorText.indexOf('.'));
-		
+
 		int patient = Integer.parseInt(patientText);
 		int doctor = Integer.parseInt(doctorText);
-		
+
 		LocalDate date = datePickerDate.getValue();
-		
+
 		String notes = textAreaNotes.getText();
-		
+
 		hdb.bookAppointment(patient, doctor, date, notes);
 	}
 
 	public void onButtonCancelAppointmentClick() {
 		paneBookAppointment.setVisible(false);
 		paneCancelAppointment.setVisible(true);
-		
+
 		setData(comboBoxAppointment, hdb.getAllAppointments(Type.Patient));
 	}
 
 	public void onButtonCancelClick() {
 		String appointmentText = comboBoxAppointment.getValue();
 		appointmentText = appointmentText.substring(0, appointmentText.indexOf('.'));
-		
+
 		int appointment = Integer.parseInt(appointmentText);
-		
+
 		hdb.cancelAppointment(appointment);
 	}
 

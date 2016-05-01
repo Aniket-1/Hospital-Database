@@ -1,5 +1,6 @@
 package application;
 
+import business.Type;
 import hospital.HospitalSecurity;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -19,7 +20,7 @@ public class LoginController extends Main {
 
 		String username = textFieldUsername.getText();
 		String password = passwordFieldPassword.getText();
-		String userType = "Admin";
+		Type type = Type.Admin;
 		
 		boolean isRoot = false;
 		
@@ -31,10 +32,10 @@ public class LoginController extends Main {
 		if (hs.login(username, password) || isRoot) {
 			// Check for root
 			if (!isRoot) {
-				userType = hs.getUserType();
+				type = Type.valueOf(hs.getUserType());
 			}
 			// Change screen
-			next(true, userType + "View.fxml", style);
+			next(true, type + "View.fxml", style);
 		}
 	}
 }

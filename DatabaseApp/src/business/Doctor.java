@@ -5,7 +5,7 @@ public class Doctor extends User {
 	private Float salary;
 
 	public Doctor(int id, String firstname, String lastname, String phone, String email, Float salary) {
-		super(id, firstname, lastname, phone, email);
+		super(id, firstname, lastname, phone, email, Type.Doctor);
 		setSalary(salary);
 	}
 

@@ -8,7 +8,9 @@ public class User {
 	String phone;
 	String email;
 
-	public User(int id, String firstname, String lastname, String phone, String email) {
+	Type type;
+
+	public User(int id, String firstname, String lastname, String phone, String email, Type type) {
 
 		this.id = id;
 
@@ -22,6 +24,8 @@ public class User {
 
 		setPhone(phone);
 		setEmail(email);
+
+		this.type = type;
 	}
 
 	public int getId() {
@@ -56,10 +60,14 @@ public class User {
 		}
 	}
 
+	public Type getType() {
+		return type;
+	}
+
 	private boolean validate(String string) {
 		return string != null && !string.trim().equals("");
 	}
-	
+
 	@Override
 	public String toString() {
 		return id + ". " + firstname + " " + lastname;

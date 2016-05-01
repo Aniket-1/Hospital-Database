@@ -32,11 +32,6 @@ public class Main extends Application {
 		String username = "CS1430196";
 		String password = "truskimp";
 
-		// HACK Remove this
-//		url = "jdbc:mysql://localhost/hospital";
-//		username = "jeegna";
-//		password = "password";
-
 		try {
 			db = new DatabaseConnector(url, username, password);
 		} catch (SQLException e) {
@@ -137,7 +132,9 @@ public class Main extends Application {
 		}
 
 		primaryStage.setTitle(title);
+		primaryStage.setMinHeight(height);
 		primaryStage.setHeight(height);
+		primaryStage.setMinWidth(width);
 		primaryStage.setWidth(width);
 
 		primaryStage.setResizable(isLogin);
