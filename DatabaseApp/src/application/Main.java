@@ -137,7 +137,7 @@ public class Main extends Application {
 		primaryStage.setMinWidth(width);
 		primaryStage.setWidth(width);
 
-		primaryStage.setResizable(isLogin);
+		//primaryStage.setResizable(isLogin);
 
 		setScene(resource);
 		setStylesheet(stylesheet);
