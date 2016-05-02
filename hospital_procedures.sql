@@ -1,10 +1,10 @@
 DROP PROCEDURE IF EXISTS raise_salary;
 DROP PROCEDURE IF EXISTS book_appointment;
+DROP PROCEDURE IF EXISTS cancel_appointment;
 DROP PROCEDURE IF EXISTS get_prescriptions;
-DROP PROCEDURE IF EXISTS get_medications;
 DROP PROCEDURE IF EXISTS get_procedures;
 DROP PROCEDURE IF EXISTS get_invoices;
-DROP PROCEDURE IF EXISTS get_family_doctors;
+DROP PROCEDURE IF EXISTS get_family_doctor;
 DROP PROCEDURE IF EXISTS get_specialists;
 DROP PROCEDURE IF EXISTS prescribe_medication;
 DROP PROCEDURE IF EXISTS perform_procedure;
@@ -40,6 +40,12 @@ BEGIN
 		VALUES (patient, doctor, appointment_date, note);
 END //
 
+/* Cancel a given appointment */
+CREATE PROCEDURE cancel_appointment(IN appointment INT)
+BEGIN
+	DELETE FROM appointments WHERE appointment_id=appointment;
+END //
+
 /* Gets all prescriptions of a given patient */
 CREATE PROCEDURE get_prescriptions(IN patient INT)
 BEGIN
@@ -49,14 +55,7 @@ BEGIN
 		WHERE patient_id=patient
 		ORDER BY prescription_id;
 END //
-
-/* Gets all medications */
-CREATE PROCEDURE get_medications()
-BEGIN
-	SELECT medication_id, medication_name
-		FROM medications;
-END //
-
+ 
 /* Gets procedures of a given patient */
 CREATE PROCEDURE get_procedures(IN patient INT)
 BEGIN
@@ -77,7 +76,7 @@ BEGIN
 END//
 
 /* Gets family doctor of given patient */
-CREATE PROCEDURE get_family_doctors(IN patient INT)
+CREATE PROCEDURE get_family_doctor(IN patient INT)
 BEGIN
 	SELECT doctor_id, firstname, lastname
 		FROM family_doctors
@@ -168,3 +167,4 @@ BEGIN
     -- Create log
     INSERT INTO logs_admin (entry) VALUES (CONCAT(pr_name, " performed on ", p_name, " by ", d_name));
 END //
+

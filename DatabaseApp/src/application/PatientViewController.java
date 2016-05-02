@@ -116,7 +116,7 @@ public class PatientViewController extends ViewController {
 		paneBookAppointment.setVisible(true);
 
 		setData(comboBoxSpecialist, hdb.getSpecialists());
-		setData(comboBoxFamilyDoctor, hdb.getFamilyDoctors(userId));
+		setData(comboBoxFamilyDoctor, hdb.getFamilyDoctor(userId));
 	}
 
 	public void onButtonBookClick() {

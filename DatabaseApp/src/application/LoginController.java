@@ -20,20 +20,19 @@ public class LoginController extends Main {
 
 		String username = textFieldUsername.getText();
 		String password = passwordFieldPassword.getText();
-		Type type = Type.Admin;
-		
+		Type type = null;
+
 		boolean isRoot = false;
-		
-		if (username.equals("root")) {
+
+		if (username.equals("admin") || username.equals("doctor") || username.equals("patient")) {
 			isRoot = true;
 		}
 
 		// Check login credentials
 		if (hs.login(username, password) || isRoot) {
-			// Check for root
-			if (!isRoot) {
-				type = Type.valueOf(hs.getUserType());
-			}
+			// Get type
+			type = hs.getUserType();
+
 			// Change screen
 			next(true, type + "View.fxml", style);
 		}

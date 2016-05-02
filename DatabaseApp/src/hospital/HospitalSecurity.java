@@ -17,12 +17,12 @@ import business.*;
 public class HospitalSecurity extends Main {
 
 	private static SecureRandom random = new SecureRandom();
-	private String userType = "ERROR";
+	private Type type = null;
 
-	public String getUserType() {
-		return userType;
+	public Type getUserType() {
+		return type;
 	}
-	
+
 	/**
 	 * Creates an account for a given user name. If the user name already
 	 * exists, or is not a valid user name, nothing will happen. Invalid user
@@ -42,38 +42,42 @@ public class HospitalSecurity extends Main {
 
 		// User does not exist
 		if (!login(username, password)) {
-			PreparedStatement stmt = db.prepareStatement(
-							"INSERT INTO users VALUES "
-								+ "(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+			PreparedStatement stmt = db
+					.prepareStatement("INSERT INTO users VALUES " + "(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
 			String salt = getSalt();
 
 			try {
+				stmt.setString(1, username);
+				stmt.setString(2, salt);
+				stmt.setBytes(3, hash(password, salt));
 				stmt.setString(4, user.getFirstname());
 				stmt.setString(5, user.getLastname());
 				stmt.setString(6, user.getPhone());
 				stmt.setString(7, user.getEmail());
-				stmt.setString(1, username);
-				stmt.setString(2, salt);
-				stmt.setBytes(3, hash(password, salt));
+				stmt.setString(10, user.getType().toString());
 
-				if (user instanceof Patient) {
-					stmt.setObject(8, null);
-					stmt.setObject(9, null);
-					stmt.setString(10, "Patient");
-				} else if (user instanceof Doctor) {
-					stmt.setFloat(8, ((Doctor) user).getSalary());
-					stmt.setObject(9, null);
-					stmt.setString(10, "Doctor");
-				} else {
+				switch (user.getType()) {
+				case Admin:
 					stmt.setFloat(8, ((Admin) user).getSalary());
 					stmt.setObject(9, null);
-					stmt.setString(10, "Admin");
+					break;
+				case Doctor:
+					stmt.setFloat(8, ((Doctor) user).getSalary());
+					stmt.setObject(9, null);
+					break;
+				case Patient:
+					stmt.setObject(8, null);
+					stmt.setObject(9, ((Patient) user).getNotes());
+					break;
+				default:
+					break;
 				}
 			} catch (SQLException e) {
 			}
 
 			try {
+				// Add user
 				db.executeUpdateStatement(stmt);
 				System.out.println("Successfully added user " + username);
 				return true;
@@ -98,49 +102,40 @@ public class HospitalSecurity extends Main {
 	 * @return True if the user name belongs to a valid user. False otherwise
 	 */
 	public boolean login(String username, String password) {
-		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
+		if (username == null || username.trim().equals("")) {
 			return false;
 		}
 
-		// Create statement
-		PreparedStatement stmt = db.prepareStatement("SELECT salt, hash, type, user_id FROM users WHERE username=?;");
-		try {
-			stmt.setString(1, username);
-		} catch (SQLException e) {
-		}
-
-		// Execute statement
-		ResultSet rs = db.executeStatement(stmt);
-
-		// Get salt
 		String salt;
+		byte[] hash;
+
 		try {
+			// Create statement
+			PreparedStatement stmt = db.prepareStatement(
+					"SELECT salt, hash, type, user_id "
+							+ "FROM users "
+							+ "WHERE username=?;");
+
+			stmt.setString(1, username);
+
+			// Execute statement
+			ResultSet rs = db.executeStatement(stmt);
 			rs.next();
+
+			// get salt
 			salt = rs.getString(1);
-			userType = rs.getString(3);
-		} catch (SQLException e) {
-			return false;
-		}
-
-		// Check for existing user name
-		try {
-			// Get hashes
-			byte[] dbHash = rs.getBytes(2);
-			byte[] inputHash = hash(password, salt);
-			boolean equal;
-
-			// Check equality of hashes
-			equal = Arrays.equals(dbHash, inputHash);
-			
+			// get hash
+			hash = rs.getBytes(2);
+			// get type
+			type = Type.valueOf(rs.getString(3));
 			// get user id
 			userId = rs.getInt(4);
-
-			return equal;
 		} catch (SQLException e) {
-			System.out.println("An error occured while checking current users");
+			return false;
 		}
 
-		return false;
+		// Return equality of hashes
+		return Arrays.equals(hash, hash(password, salt));
 	}
 
 	/**
@@ -162,6 +157,10 @@ public class HospitalSecurity extends Main {
 	 * @return The has
 	 */
 	public byte[] hash(String password, String salt) {
+		if (password == null || password.equals("")) {
+			return null;
+		}
+
 		try {
 			SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
 

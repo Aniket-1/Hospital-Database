@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS medications;
 DROP TABLE IF EXISTS appointments;
 
 DROP TABLE IF EXISTS family_doctors;
--- DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE IF NOT EXISTS `users` (
 	`user_id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -131,7 +131,11 @@ CREATE TABLE `notifications` (
 
 -- CREATE INDEX `idx_table_name` ON `table` (`column`);
 
--- default user with admin privileges.
--- INSERT INTO users VALUES (null, 'root', null, null, 'root', 'user', '5141234567', 'root@root.com', null, null, 'Admin');
+-- default user with admin privileges
+INSERT INTO users VALUES (null, 'admin', null, null, 'admin', 'user', '5141234567', 'admin@root.admin', '80.00', null, 'Admin');
+-- default user with doctor privileges
+INSERT INTO users VALUES (null, 'doctor', null, null, 'doctor', 'user', '5141234567', 'doctor@doctor.com', '50.00', null, 'Doctor');
+-- default user with patient privileges
+INSERT INTO users VALUES (null, 'patient', null, null, 'patient', 'user', '5141234567', 'patient@patient.com', null, 'Some notes', 'Patient');
 
 COMMIT;

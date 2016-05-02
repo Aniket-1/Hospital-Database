@@ -16,13 +16,11 @@ public class Main extends Application {
 
 	protected static Stage primaryStage;
 	protected static Scene scene;
-
 	private static FXMLLoader loader;
 
-	protected static DatabaseConnector db;
-
 	protected static String style = "light.css";
-	
+
+	protected static DatabaseConnector db;
 	protected static int userId;
 
 	public static void main(String[] args) throws SQLException {
@@ -84,7 +82,8 @@ public class Main extends Application {
 		// Set stage
 		Main.primaryStage = primaryStage;
 		primaryStage.setResizable(false);
-		primaryStage.getIcons().add(new Image("http://icons.iconarchive.com/icons/gcds/halloween/64/grim-reaper-icon.png"));
+		primaryStage.getIcons()
+				.add(new Image("http://icons.iconarchive.com/icons/gcds/halloween/64/grim-reaper-icon.png"));
 
 		// Say "Bye" on exit because that's adorable
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -136,8 +135,6 @@ public class Main extends Application {
 		primaryStage.setHeight(height);
 		primaryStage.setMinWidth(width);
 		primaryStage.setWidth(width);
-
-		//primaryStage.setResizable(isLogin);
 
 		setScene(resource);
 		setStylesheet(stylesheet);

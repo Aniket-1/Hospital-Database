@@ -146,7 +146,7 @@ public class DoctorViewController extends ViewController {
 		paneMedications.setVisible(true);
 
 		setData(comboBoxMedicationPatient, hdb.getAllUsers(Type.Patient));
-		setData(comboBoxMedications, hdb.getMedications());
+		setData(comboBoxMedications, hdb.getAllMedications());
 	}
 
 	public void onButtonPrescribeMedicationClick() {
@@ -206,7 +206,7 @@ public class DoctorViewController extends ViewController {
 		paneBookAppointment.setVisible(false);
 		paneCancelAppointment.setVisible(true);
 
-		setData(comboBoxAppointment, hdb.getAppointments(userId));
+		setData(comboBoxAppointment, hdb.getAppointments(userId, Type.Doctor, Type.Patient));
 	}
 
 	public void onButtonCancelClick() {
