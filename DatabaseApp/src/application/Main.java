@@ -38,7 +38,7 @@ public class Main extends Application {
 			System.out.println("SQLException: " + e.getMessage());
 			System.out.println("SQLState: " + e.getSQLState());
 			System.out.println("VendorError: " + e.getErrorCode());
-			System.err.println("Could not create connection to database.\nOperation aborted");
+			System.out.println("Could not create connection to database.\nOperation aborted");
 			return;
 		}
 

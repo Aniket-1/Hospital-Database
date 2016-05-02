@@ -1,20 +1,15 @@
 package application;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import business.Doctor;
 import business.Patient;
 import business.Type;
 import hospital.HospitalDatabase;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -23,7 +18,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
-public class DoctorViewController extends Main {
+public class DoctorViewController extends ViewController {
 
 	private HospitalDatabase hdb = new HospitalDatabase();
 
@@ -64,12 +59,12 @@ public class DoctorViewController extends Main {
 	public Button buttonPrescribeMedication;
 
 	public AnchorPane paneInformation;
-	public Label labelFirstname;
-	public Label labelLastname;
-	public Label labelPhone;
-	public Label labelEmail;
-	public Label labelSalary;
-	
+	public TextField textFieldFirstname;
+	public TextField textFieldLastname;
+	public TextField textFieldPhone;
+	public TextField textFieldEmail;
+	public TextField textFieldSalary;
+
 	public AnchorPane paneAppointments;
 	public Button buttonBookAppointment;
 	public Button buttonCancelAppointment;
@@ -84,27 +79,24 @@ public class DoctorViewController extends Main {
 	public ComboBox<String> comboBoxAppointment;
 	public Button buttonCancel;
 
-	public void onViewAppointmentsClick() {
+	public void onButtonViewAppointmentsClick() {
 		hide();
 		paneViewAppointments.setVisible(true);
 
-		ObservableList<String> upcoming = FXCollections
-				.observableArrayList(hdb.getUpcomingAppointments(userId, Type.Doctor, Type.Patient));
-		ObservableList<String> past = FXCollections
-				.observableArrayList(hdb.getPastAppointments(userId, Type.Doctor, Type.Patient));
-
-		displayList(listUpcomingAppointments, upcoming);
-		displayList(listPastAppointments, past);
+		displayList(listUpcomingAppointments,
+				FXCollections.observableArrayList(hdb.getUpcomingAppointments(userId, Type.Doctor, Type.Patient)));
+		displayList(listPastAppointments,
+				FXCollections.observableArrayList(hdb.getPastAppointments(userId, Type.Doctor, Type.Patient)));
 	}
 
-	public void onPatientsClick() {
+	public void onButtonPatientsClick() {
 		hide();
 		panePatients.setVisible(true);
 
 		setData(comboBoxPatients, hdb.getAllUsers(Type.Patient));
 	}
 
-	public void onPatientSelect() {
+	public void onButtonPatientSelect() {
 		String patientText = comboBoxPatients.getValue();
 		patientText = patientText.substring(0, patientText.indexOf('.'));
 		int patient = Integer.parseInt(patientText);
@@ -118,7 +110,7 @@ public class DoctorViewController extends Main {
 		textAreaPatientNotes.setText(user.getNotes());
 	}
 
-	public void onPatientUpdateClick() {
+	public void onButtonPatientUpdateClick() {
 		String patientText = comboBoxPatients.getValue();
 		patientText = patientText.substring(0, patientText.indexOf('.'));
 
@@ -129,7 +121,7 @@ public class DoctorViewController extends Main {
 		hdb.updateUser(patient);
 	}
 
-	public void onProceduresClick() {
+	public void onButtonProceduresClick() {
 		hide();
 		paneProcedures.setVisible(true);
 
@@ -137,7 +129,7 @@ public class DoctorViewController extends Main {
 		setData(comboBoxProcedures, hdb.getAllProcedures());
 	}
 
-	public void onPerformProcedureClick() {
+	public void onButtonPerformProcedureClick() {
 		String patientText = comboBoxDoctorPatients.getValue();
 		patientText = patientText.substring(0, patientText.indexOf('.'));
 		int patient = Integer.parseInt(patientText);
@@ -149,7 +141,7 @@ public class DoctorViewController extends Main {
 		hdb.performProcedure(patient, procedure, userId);
 	}
 
-	public void onMedicationsClick() {
+	public void onButtonMedicationsClick() {
 		hide();
 		paneMedications.setVisible(true);
 
@@ -157,7 +149,7 @@ public class DoctorViewController extends Main {
 		setData(comboBoxMedications, hdb.getMedications());
 	}
 
-	public void onPrescribeMedicationClick() {
+	public void onButtonPrescribeMedicationClick() {
 		String patientText = comboBoxMedicationPatient.getValue();
 		patientText = patientText.substring(0, patientText.indexOf('.'));
 		int patient = Integer.parseInt(patientText);
@@ -169,26 +161,26 @@ public class DoctorViewController extends Main {
 		hdb.prescribeMedication(patient, medication, userId);
 	}
 
-	public void onInformationClick() {
+	public void onButtonInformationClick() {
 		hide();
 		paneInformation.setVisible(true);
 
 		Doctor user = (Doctor) hdb.getUserInfo(userId);
 
-		labelFirstname.setText("Firstname: " + user.getFirstname());
-		labelLastname.setText("Lastname: " + user.getLastname());
-		labelPhone.setText("Phone: " + user.getPhone());
-		labelEmail.setText("Email: " + user.getEmail());
-		labelSalary.setText("Salary: $" + user.getSalary());
+		textFieldFirstname.setText(user.getFirstname());
+		textFieldLastname.setText(user.getLastname());
+		textFieldPhone.setText(user.getPhone());
+		textFieldEmail.setText(user.getEmail());
+		textFieldSalary.setText("$" + user.getSalary());
 	}
 
-	public void onAppointmentsClick() {
+	public void onButtonAppointmentsClick() {
 		hide();
 		paneAppointments.setVisible(true);
 		paneBookAppointment.setVisible(false);
 		paneCancelAppointment.setVisible(false);
 	}
-	
+
 	public void onButtonBookAppointmentClick() {
 		paneBookAppointment.setVisible(true);
 		paneCancelAppointment.setVisible(false);
@@ -225,49 +217,14 @@ public class DoctorViewController extends Main {
 
 		hdb.cancelAppointment(appointment);
 	}
-	
-	public void close() {
-		logout();
-		try {
-			Main.db.closeConnection();
-		} catch (SQLException e) {
-			System.out.println("Could not successfully close connection");
-		}
-		System.exit(0);
-	}
 
-	public void logout() {
-		// Change screen
-		next(false, "Login.fxml", style);
-	}
-
-	private void displayList(ListView<String> listView, ObservableList<String> list) {
-		listView.setItems(list);
-	}
-
-	private void hide() {
+	@Override
+	void hide() {
 		paneViewAppointments.setVisible(false);
 		panePatients.setVisible(false);
 		paneProcedures.setVisible(false);
 		paneMedications.setVisible(false);
 		paneInformation.setVisible(false);
 		paneAppointments.setVisible(false);
-	}
-
-	private void setData(ComboBox<String> comboBox, List<?> list) {
-		// Clear combobox
-		comboBox.getItems().clear();
-
-		if (list.size() == 0) {
-			return;
-		}
-
-		// Add items from list
-		int size = list.size();
-		List<String> newList = new ArrayList<String>();
-		for (int i = 0; i < size; i++) {
-			newList.add(list.get(i).toString());
-		}
-		comboBox.getItems().addAll(newList);
 	}
 }

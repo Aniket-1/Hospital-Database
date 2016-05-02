@@ -1,17 +1,15 @@
 package application;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import business.*;
 import hospital.HospitalDatabase;
 import hospital.HospitalSecurity;
+import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -22,7 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 
-public class AdminViewController extends Main {
+public class AdminViewController extends ViewController {
 
 	private HospitalDatabase hdb = new HospitalDatabase();
 
@@ -36,6 +34,7 @@ public class AdminViewController extends Main {
 	public Button buttonDoctors;
 	public Button buttonAppointments;
 	public Button buttonNotifications;
+	public Button buttonLogs;
 	public Button buttonInformation;
 
 	public AnchorPane paneCreateUser;
@@ -95,14 +94,17 @@ public class AdminViewController extends Main {
 	public Button buttonCancel;
 
 	public AnchorPane paneNotifications;
-	public TextArea textAreaNotifications;
+	public ListView<String> listViewNotifications;
+
+	public AnchorPane paneLogs;
+	public ListView<String> listViewLogs;
 
 	public AnchorPane paneInformation;
-	public Label labelFirstname;
-	public Label labelLastname;
-	public Label labelPhone;
-	public Label labelEmail;
-	public Label labelSalary;
+	public TextField textFieldFirstname;
+	public TextField textFieldLastname;
+	public TextField textFieldPhone;
+	public TextField textFieldEmail;
+	public TextField textFieldSalary;
 
 	public void onButtonCreateAccountClick() {
 		hide();
@@ -121,27 +123,18 @@ public class AdminViewController extends Main {
 		paneAppointments.setVisible(true);
 	}
 
-	// TODO Also show log files on medications and procedures
 	public void onButtonNotificationsClick() {
 		hide();
 		paneNotifications.setVisible(true);
 
-		List<String> list = hdb.getNotifications();
-
-		for (int i = 0; i < list.size(); i++) {
-			textAreaNotifications.setText(list.get(i));
-		}
+		displayList(listViewNotifications, FXCollections.observableArrayList(hdb.getNotifications()));
 	}
-	
+
 	public void onButtonLogsClick() {
 		hide();
-		paneNotifications.setVisible(true);
+		paneLogs.setVisible(true);
 
-		List<String> list = hdb.getLogs();
-
-		for (int i = 0; i < list.size(); i++) {
-			textAreaNotifications.setText(list.get(i));
-		}
+		displayList(listViewLogs, FXCollections.observableArrayList(hdb.getLogs()));
 	}
 
 	public void onButtonInformationClick() {
@@ -150,11 +143,11 @@ public class AdminViewController extends Main {
 
 		Admin user = (Admin) hdb.getUserInfo(userId);
 
-		labelFirstname.setText("Firstname: " + user.getFirstname());
-		labelLastname.setText("Lastname: " + user.getLastname());
-		labelPhone.setText("Phone: " + user.getPhone());
-		labelEmail.setText("Email: " + user.getEmail());
-		labelSalary.setText("Salary: $" + user.getSalary());
+		textFieldFirstname.setText(user.getFirstname());
+		textFieldLastname.setText(user.getLastname());
+		textFieldPhone.setText(user.getPhone());
+		textFieldEmail.setText(user.getEmail());
+		textFieldSalary.setText("$" + user.getSalary());
 	}
 
 	public void radioButtonAdminSelected() {
@@ -294,43 +287,13 @@ public class AdminViewController extends Main {
 		hdb.cancelAppointment(appointment);
 	}
 
-	public void close() {
-		logout();
-		try {
-			Main.db.closeConnection();
-		} catch (SQLException e) {
-			System.out.println("Could not successfully close connection");
-		}
-		System.exit(0);
-	}
-
-	public void logout() {
-		// Change screen
-		next(false, "Login.fxml", style);
-	}
-
-	private void hide() {
+	@Override
+	void hide() {
 		paneCreateUser.setVisible(false);
 		paneDoctors.setVisible(false);
 		paneAppointments.setVisible(false);
 		paneNotifications.setVisible(false);
+		paneLogs.setVisible(false);
 		paneInformation.setVisible(false);
-	}
-
-	private void setData(ComboBox<String> comboBox, List<?> list) {
-		// Clear combobox
-		comboBox.getItems().clear();
-		
-		if (list.size() == 0) {
-			return;
-		}
-		
-		// Add items from list
-		int size = list.size();
-		List<String> newList = new ArrayList<String>();
-		for (int i = 0; i < size; i++) {
-			newList.add(list.get(i).toString());
-		}
-		comboBox.getItems().addAll(newList);
 	}
 }

@@ -19,12 +19,12 @@
 		</MenuBar>
       <AnchorPane fx:id="paneMenu" prefHeight="384.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="30.0">
          <children>
-            <Button fx:id="buttonAppointments" layoutX="30.0" layoutY="35.0" mnemonicParsing="false" onAction="#onAppointmentsClick" prefHeight="25.0" prefWidth="170.0" text="Appointments" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="35.0" />
-            <Button fx:id="buttonPrescriptions" layoutX="30.0" layoutY="70.0" mnemonicParsing="false" onAction="#onPrescriptionsClick" text="Prescriptions" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="70.0" />
-            <Button fx:id="buttonProcedures" layoutX="30.0" layoutY="105.0" mnemonicParsing="false" onAction="#onProceduresClick" text="Procedures" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="105.0" />
-            <Button fx:id="buttonInvoices" layoutX="30.0" layoutY="140.0" mnemonicParsing="false" onAction="#onInvoicesClick" text="Invoices" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="140.0" />
-            <Button fx:id="buttonInformation" layoutX="31.0" layoutY="209.0" mnemonicParsing="false" onAction="#onInformationClick" prefHeight="25.0" prefWidth="160.0" text="Information" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="175.0" />
-            <Button fx:id="buttonBookAppointment" layoutX="41.0" layoutY="219.0" mnemonicParsing="false" onAction="#onBookAppointmentClick" prefHeight="25.0" prefWidth="160.0" text="Book Appointment" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="210.0" />
+            <Button fx:id="buttonAppointments" layoutX="30.0" layoutY="35.0" mnemonicParsing="false" onAction="#onButtonAppointmentsClick" prefHeight="25.0" prefWidth="170.0" text="Appointments" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="35.0" />
+            <Button fx:id="buttonPrescriptions" layoutX="30.0" layoutY="70.0" mnemonicParsing="false" onAction="#onButtonPrescriptionsClick" text="Prescriptions" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="70.0" />
+            <Button fx:id="buttonProcedures" layoutX="30.0" layoutY="105.0" mnemonicParsing="false" onAction="#onButtonProceduresClick" text="Procedures" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="105.0" />
+            <Button fx:id="buttonInvoices" layoutX="30.0" layoutY="140.0" mnemonicParsing="false" onAction="#onButtonInvoicesClick" text="Invoices" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="140.0" />
+            <Button fx:id="buttonInformation" layoutX="31.0" layoutY="209.0" mnemonicParsing="false" onAction="#onButtonInformationClick" prefHeight="25.0" prefWidth="160.0" text="Information" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="175.0" />
+            <Button fx:id="buttonBookAppointment" layoutX="41.0" layoutY="219.0" mnemonicParsing="false" onAction="#onButtonBookAppointmentClick" prefHeight="25.0" prefWidth="160.0" text="Book Appointment" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="210.0" />
             <Separator layoutX="211.0" layoutY="5.0" orientation="VERTICAL" prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
@@ -79,7 +79,7 @@
             <ComboBox fx:id="comboBoxFamilyDoctor" layoutX="152.0" layoutY="45.0" prefWidth="150.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="45.0" />
             <ComboBox fx:id="comboBoxSpecialist" layoutX="158.0" layoutY="80.0" prefWidth="150.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="80.0" />
             <DatePicker fx:id="datePickerDate" layoutX="159.0" layoutY="115.0" prefHeight="25.0" prefWidth="150.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="115.0" />
-            <Button fx:id="buttonBook" layoutX="247.0" layoutY="315.0" mnemonicParsing="false" onAction="#onBookClick" text="Book Appointment" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+            <Button fx:id="buttonBook" layoutX="247.0" layoutY="315.0" mnemonicParsing="false" onAction="#onButtonBookClick" text="Book Appointment" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
          </children>
       </AnchorPane>
    </children>

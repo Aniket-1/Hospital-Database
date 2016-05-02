@@ -1,9 +1,6 @@
 package application;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import business.Patient;
 import business.Type;
@@ -21,7 +18,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
-public class PatientViewController extends Main {
+public class PatientViewController extends ViewController {
 
 	private HospitalDatabase hdb = new HospitalDatabase();
 
@@ -57,14 +54,14 @@ public class PatientViewController extends Main {
 	public TextField textFieldPhone;
 	public TextField textFieldEmail;
 	public TextArea textAreaNotes;
-	
+
 	public AnchorPane paneBookAppointment;
 	public ComboBox<String> comboBoxFamilyDoctor;
 	public ComboBox<String> comboBoxSpecialist;
 	public DatePicker datePickerDate;
 	public Button buttonBook;
 
-	public void onAppointmentsClick() {
+	public void onButtonAppointmentsClick() {
 		hide();
 		paneAppointments.setVisible(true);
 
@@ -77,7 +74,7 @@ public class PatientViewController extends Main {
 		displayList(listPastAppointments, past);
 	}
 
-	public void onPrescriptionsClick() {
+	public void onButtonPrescriptionsClick() {
 		hide();
 		panePrescriptions.setVisible(true);
 
@@ -85,7 +82,7 @@ public class PatientViewController extends Main {
 		displayList(listPrescriptions, results);
 	}
 
-	public void onProceduresClick() {
+	public void onButtonProceduresClick() {
 		hide();
 		paneProcedures.setVisible(true);
 
@@ -93,7 +90,7 @@ public class PatientViewController extends Main {
 		displayList(listProcedures, results);
 	}
 
-	public void onInvoicesClick() {
+	public void onButtonInvoicesClick() {
 		hide();
 		paneInvoices.setVisible(true);
 
@@ -101,7 +98,7 @@ public class PatientViewController extends Main {
 		displayList(listInvoices, results);
 	}
 
-	public void onInformationClick() {
+	public void onButtonInformationClick() {
 		hide();
 		paneInformation.setVisible(true);
 
@@ -113,70 +110,35 @@ public class PatientViewController extends Main {
 		textFieldEmail.setText(user.getEmail());
 		textAreaNotes.setText(user.getNotes());
 	}
-	
-	public void onBookAppointmentClick() {
+
+	public void onButtonBookAppointmentClick() {
 		hide();
 		paneBookAppointment.setVisible(true);
-		
+
 		setData(comboBoxSpecialist, hdb.getSpecialists());
 		setData(comboBoxFamilyDoctor, hdb.getFamilyDoctors(userId));
 	}
-	
-	public void onBookClick() {
+
+	public void onButtonBookClick() {
 		String doctorText = comboBoxFamilyDoctor.getValue();
 		if (doctorText == null || doctorText.equals("")) {
 			doctorText = comboBoxSpecialist.getValue();
 		}
-		
+
 		doctorText = doctorText.substring(0, doctorText.indexOf('.'));
 		int doctor = Integer.parseInt(doctorText);
 		LocalDate date = datePickerDate.getValue();
-		
+
 		hdb.bookAppointment(userId, doctor, date, null);
 	}
 
-	private void displayList(ListView<String> listView, ObservableList<String> list) {
-		listView.setItems(list);
-	}
-
-	public void close() {
-		logout();
-		try {
-			Main.db.closeConnection();
-		} catch (SQLException e) {
-			System.out.println("Could not successfully close connection");
-		}
-		System.exit(0);
-	}
-
-	public void logout() {
-		// Change screen
-		next(false, "Login.fxml", style);
-	}
-
-	private void hide() {
+	@Override
+	void hide() {
 		paneAppointments.setVisible(false);
 		panePrescriptions.setVisible(false);
 		paneProcedures.setVisible(false);
 		paneInvoices.setVisible(false);
 		paneInformation.setVisible(false);
 		paneBookAppointment.setVisible(false);
-	}
-	
-	private void setData(ComboBox<String> comboBox, List<?> list) {
-		// Clear combobox
-		comboBox.getItems().clear();
-		
-		if (list.size() == 0) {
-			return;
-		}
-		
-		// Add items from list
-		int size = list.size();
-		List<String> newList = new ArrayList<String>();
-		for (int i = 0; i < size; i++) {
-			newList.add(list.get(i).toString());
-		}
-		comboBox.getItems().addAll(newList);
 	}
 }
